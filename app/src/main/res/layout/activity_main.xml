@@ -7,6 +7,7 @@
     tools:context="screenrecorder.com.example.android.recordscreen.MainActivity">
 
     <Button
+        android:id="@+id/btn_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
