@@ -28,15 +28,15 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     // TODO 2. Add variables for the following: mScreenDensity, display width+height
-    // TODO 3. The button, media projection, virtualdisplay, media recorder,
-    // TODO 3. request permission, and isRecording
+    // TODO  The button, media projection, virtualdisplay, media recorder,
+    // TODO  request permission, and isRecording
 
     // all variables
     private static final int displayWidth = 1080;
     private static final int displayHeight = 1920;
     private static final int REQUEST_CODE = 1000;
     private int screenDensity;
-    Button btn_action;
+    Button buttonAction;
     private VirtualDisplay  mVirtualDisplay;
     private MediaProjection  mMediaProjection;
     private MediaRecorder mMediaRecorder;
@@ -48,9 +48,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        buttonAction = (Button) findViewById(R.id.btn_action);
 
 
         // TODO 6. String array that holds the PERMISSIONS{ Manifest.permission.WRITE_INTERNAL_STORAGE,}
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO};}
 
         // TODO 7. If statement to check if the permissions are granted and request the permissionKey
 
@@ -59,10 +63,21 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         // TODO 9. Get id for button and check for onClick actions
+
+        public void changeText(){
+
+            if (isRecording){
+                buttonAction.setText("Stop recording");
+            }else {
+                buttonAction.setText("Start recording");
+            }
+    }
     }
 
     // TODO 10. Make method to change text in button if the recorder is recording or not
+
 
 
     // TODO 11. method to toggle the screen sharing
