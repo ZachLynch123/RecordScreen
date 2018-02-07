@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonAction;
     private VirtualDisplay  mVirtualDisplay;
     private MediaProjection  mMediaProjection;
+    private MediaProjectionManager  mProjectionManager;
     private MediaRecorder mMediaRecorder;
     private static int pemissionKey = 1;
     private  static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -70,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         mMediaRecorder = new MediaRecorder();
         mScreenDensity = metrics.densityDpi;
 
-        
+        mProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+
 
 
         buttonAction.setOnClickListener(new View.OnClickListener() {
