@@ -12,7 +12,6 @@ import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
-import android.media.projection.*;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +25,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.function.Function;
+
+import static android.hardware.display.DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private MediaProjection  mMediaProjection;
     private MediaProjectionManager  mProjectionManager;
     private MediaRecorder mMediaRecorder;
+    // have to create a private inner class within the main class in order to use MediaProjectionCallback as a variable type
+    private MediaProjectionCallback mMediaProjectionCallback;
     private static int pemissionKey = 1;
     private  static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     boolean isRecording = false;
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.RECORD_AUDIO};
         // initialized Display Mertrics and set it to the variable metrics
         DisplayMetrics metrics = new DisplayMetrics();
-        // initialized media recorder
+        // cast media recorder to the mMediaRecorder variable
         mMediaRecorder = new MediaRecorder();
         // gets DPI of screen
         mScreenDensity = metrics.densityDpi;
@@ -87,17 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-        // TODO 7. If statement to check if the permissions are granted and request the permissionKey
-
-        // TODO 8. Set up DisplayMatrix and initialize mediarecorder method
 
 
 
 
-
-
-
-        public void brnReload(){
+        public void btnReload(){
 
         if (isRecording){
             buttonAction.setText("Stop Recording");
@@ -107,11 +104,48 @@ public class MainActivity extends AppCompatActivity {
         }
         public void onToggleScreenShare() {
             if (!isRecording) {
-                initalizeRec();
+                initialzieRec();
                 shareScreen();
+            } else {
+                // stops and resets the media recorder
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+                stopScreenSharing();
             }
         }
+        public void shareScreen() {
+            /* refer to MediaProjectionManager documentation. in order to start the screenCapture intent
+            startActivityForResult () must pass to getMediaProjection
+             */
+            if (mMediaProjection == null) {
+                startActivityForResult(mProjectionManager.createScreenCaptureIntent(),REQUEST_CODE);
+                return;
+            }
+            mVirtualDisplay = createVirtualDisplay();
+            mMediaRecorder.start();
+            isRecording = true;
+            btnReload();
+            }
+            // refer to displayManager documentation. Have to us VIRTUAL_DISPLAY_MIRROR and getSurface()
+            private VirtualDisplay createVirtualDisplay(){
+            // capture screen to record
+            return mMediaProjection.createVirtualDisplay("MainActivity", displayWidth, displayHeight,
+                    mScreenDensity, VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, mMediaRecorder.getSurface(), null, null);
+            }
+            // inintialze the recording of the screen
+            private void initialzieRec(){
+                try {
+                    mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+
+                }
+
+            }
+
     }
+
+
+
 
     // TODO 10. Make method to change text in button if the recorder is recording or not
 
