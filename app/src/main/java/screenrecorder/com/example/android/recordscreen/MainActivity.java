@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int displayHeight = 1920;
     private static final int REQUEST_CODE = 1000;
     private int mScreenDensity;
-    Button buttonAction;
+    // added findViewById to the variable all in 1 line to eliminate redundancy
+    Button buttonAction = (Button) findViewById(R.id.btn_action);
     private VirtualDisplay  mVirtualDisplay;
     private MediaProjection  mMediaProjection;
     private MediaProjectionManager  mProjectionManager;
@@ -60,17 +61,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        buttonAction = (Button) findViewById(R.id.btn_action);
-
-
-        // TODO 6. String array that holds the PERMISSIONS{ Manifest.permission.WRITE_INTERNAL_STORAGE,}
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO};
+        // initialized Display Mertrics and set it to the variable metrics
         DisplayMetrics metrics = new DisplayMetrics();
+        // initialized media recorder
         mMediaRecorder = new MediaRecorder();
+        // gets DPI of screen
         mScreenDensity = metrics.densityDpi;
 
+        // manages the retrieval of certain types of MediaProjection
         mProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
 
@@ -78,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         buttonAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isRecording = true;
-                changeText();
+                onToggleScreenShare();
             }
         });
 
@@ -95,24 +95,22 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // TODO 9. Get id for button and check for onClick actions
 
 
-        public void changeText(){
+        public void brnReload(){
 
-        boolean rec = false;
-
-            if (isRecording && rec == true ){
-                buttonAction.setText("Stop recording");
-                initRecorder();
+        if (isRecording){
+            buttonAction.setText("Stop Recording");
+        } else {
+            buttonAction.setText("Start Recording");
+        }
+        }
+        public void onToggleScreenShare() {
+            if (!isRecording) {
+                initalizeRec();
                 shareScreen();
-            }else {
-                buttonAction.setText("Start recording");
-                mMediaRecorder.stop();
-                mMediaRecorder.start();
-                stopScreenSharing();
             }
-    }
+        }
     }
 
     // TODO 10. Make method to change text in button if the recorder is recording or not
