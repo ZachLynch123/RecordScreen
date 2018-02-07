@@ -135,9 +135,41 @@ public class MainActivity extends AppCompatActivity {
             // inintialze the recording of the screen
             private void initialzieRec(){
                 try {
+                    /*
+                     CAREFUL WITH THE VIDEO CODING it must be configured in a
+                                        SPECIFIC
+                     order for it to work properly
+                      */
+                    /*
+                     sets the audio source (audio output in this case is set to MIC)
+                     since the mic is in the virtual display, the mic is basically just the
+                     output of the phone
+                     if there are any questions about this, look up MediaRecorder documentation
+                     it has everything there
+                      */
                     mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    // setting video source, which in this case is just the surface of the actual phone
                     mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-
+                    mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                    // saves it to the external SD card with the extension video.mp4
+                    mMediaRecorder.setOutputFile(Environment.getExternalStorageDirectory() + "/video.mp4");
+                    // set video size to the display width and height
+                    mMediaRecorder.setVideoSize(displayWidth, displayHeight);
+                    mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+                    mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
+                    // tried to set frameRate to 60. if it doesn't work set it to 30 (16)
+                    mMediaRecorder.setVideoFrameRate(32); // 60?
+                    mMediaRecorder.setVideoEncodingBitRate(3000000);
+                    // get the rotation of the screen based on whether the display was rotated or not
+                    int rotation = getWindowManager().getDefaultDisplay().getRotation();
+                    int orientation = ORIENTATIONS.get(rotation + 90);
+                    // set the orientation
+                    mMediaRecorder.setOrientationHint(orientation);
+                    // prepare to record
+                    mMediaRecorder.prepare();
+                } catch (IOException e){
+                    e.printStackTrace();
                 }
 
             }
