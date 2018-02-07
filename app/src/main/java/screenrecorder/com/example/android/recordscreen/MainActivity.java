@@ -54,7 +54,18 @@ public class MainActivity extends AppCompatActivity {
         // TODO 6. String array that holds the PERMISSIONS{ Manifest.permission.WRITE_INTERNAL_STORAGE,}
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO};}
+                Manifest.permission.RECORD_AUDIO};
+        buttonAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isRecording = true;
+                changeText();
+            }
+        });
+
+
+
+    }
 
         // TODO 7. If statement to check if the permissions are granted and request the permissionKey
 
@@ -65,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // TODO 9. Get id for button and check for onClick actions
+
 
         public void changeText(){
 
