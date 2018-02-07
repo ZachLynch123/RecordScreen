@@ -81,4 +81,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     // TODO 11. method to toggle the screen sharing
-}
+
