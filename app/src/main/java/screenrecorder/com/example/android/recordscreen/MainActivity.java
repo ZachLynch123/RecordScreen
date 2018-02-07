@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                      since the mic is in the virtual display, the mic is basically just the
                      output of the phone
                      if there are any questions about this, look up MediaRecorder documentation
-                     it has everything there
+                     it has everything there. and trust me future self or others, there may be some questions
                       */
                     mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     // setting video source, which in this case is just the surface of the actual phone
