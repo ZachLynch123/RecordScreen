@@ -1,5 +1,6 @@
 package screenrecorder.com.example.android.recordscreen;
 // TODO 1. Import all necessary libraries
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,17 +34,26 @@ public class MainActivity extends AppCompatActivity {
     // TODO  request permission, and isRecording
 
     // all variables
+    private static final String TAG = "MainActivity";
     private static final int displayWidth = 1080;
     private static final int displayHeight = 1920;
     private static final int REQUEST_CODE = 1000;
-    private int screenDensity;
+    private int mScreenDensity;
     Button buttonAction;
     private VirtualDisplay  mVirtualDisplay;
     private MediaProjection  mMediaProjection;
     private MediaRecorder mMediaRecorder;
     private static int pemissionKey = 1;
+    private  static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     boolean isRecording = false;
+
     // TODO 5. add static method for the orientation of screen. format:  ORIENTATION.append(Surface.ROTATION_0,90)
+    static {
+        ORIENTATIONS.append(Surface.ROTATION_0,90);
+        ORIENTATIONS.append(Surface.ROTATION_90,180);
+        ORIENTATIONS.append(Surface.ROTATION_180,270);
+        ORIENTATIONS.append(Surface.ROTATION_270,360);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO};
+        DisplayMetrics metrics = new DisplayMetrics();
+        mMediaRecorder = new MediaRecorder();
+        mScreenDensity = metrics.densityDpi;
+
+        
+
+
         buttonAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,10 +98,17 @@ public class MainActivity extends AppCompatActivity {
 
         public void changeText(){
 
-            if (isRecording){
+        boolean rec = false;
+
+            if (isRecording && rec == true ){
                 buttonAction.setText("Stop recording");
+                initRecorder();
+                shareScreen();
             }else {
                 buttonAction.setText("Start recording");
+                mMediaRecorder.stop();
+                mMediaRecorder.start();
+                stopScreenSharing();
             }
     }
     }
