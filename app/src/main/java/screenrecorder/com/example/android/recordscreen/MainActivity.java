@@ -1,6 +1,7 @@
 package screenrecorder.com.example.android.recordscreen;
 // TODO 1. Import all necessary libraries
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -86,13 +87,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
-
-
-
-
 
         public void btnReload(){
 
@@ -185,21 +180,60 @@ public class MainActivity extends AppCompatActivity {
             }
             private void destroyMediaProjection() {
                 if (mMediaProjection != null) {
-                   //  mMediaProjection.unregisterCallback();
+                    mMediaProjection.unregisterCallback(mMediaProjectionCallback);
                     mMediaProjection.stop();
                     mMediaProjection = null;
                 }
                 Log.i(TAG,"MediaProjectionStopped");
             }
+            @Override
+            protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+                if (requestCode!= REQUEST_CODE) {
+                    Log.e(TAG, "Unknown request code: " + requestCode);
+                    return;
+                }
+                if (requestCode != RESULT_OK) {
+                    Toast.makeText(this,"Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();
+                    isRecording = false;
+                    btnReload();
+                    return;
+                }
+                // cast Media Project callback
+                mMediaProjectionCallback = new MediaProjectionCallback();
+                mMediaProjection = mProjectionManager.getMediaProjection(resultCode,data);
+                // call the createVirtualDisplay method
+                mVirtualDisplay = createVirtualDisplay();
+                isRecording = true;
+                btnReload();
+            }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    private class MediaProjectionCallback extends MediaProjection.Callback {
+        @Override
+        public void onStop() {
+            if (isRecording) {
+                isRecording = false;
+                btnReload();
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+            }
+            mMediaProjection = null;
+            stopScreenSharing();
+        }
+            }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destroyMediaProjection();
+    }
+
+}
 
 
 
-    // TODO 10. Make method to change text in button if the recorder is recording or not
-
-
-
-    // TODO 11. method to toggle the screen sharing
 
