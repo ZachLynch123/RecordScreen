@@ -1,5 +1,4 @@
 package screenrecorder.com.example.android.recordscreen;
-// TODO 1. Import all necessary libraries
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -207,10 +206,6 @@ public class MainActivity extends AppCompatActivity {
                 btnReload();
             }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 
     private class MediaProjectionCallback extends MediaProjection.Callback {
         @Override
