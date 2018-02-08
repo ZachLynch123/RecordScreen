@@ -173,6 +173,24 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+            private void stopScreenSharing() {
+
+                if (mVirtualDisplay == null) {
+                    return;
+                }
+                mVirtualDisplay.release();
+                destroyMediaProjection();
+                isRecording = false;
+                btnReload();
+            }
+            private void destroyMediaProjection() {
+                if (mMediaProjection != null) {
+                   //  mMediaProjection.unregisterCallback();
+                    mMediaProjection.stop();
+                    mMediaProjection = null;
+                }
+                Log.i(TAG,"MediaProjectionStopped");
+            }
 
     }
 
